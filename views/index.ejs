@@ -1,11 +1,42 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
+
+<head>
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+  <h1><%= title %></h1>
+  <p>Welcome to <%= title %></p>
+  <div class='add-item-field'>
+    <input placeholder='Title' />
+    <input placeholder='Quantity' type='number' min='0' />
+    <input placeholder='Category' />
+    <input placeholder='Warehouse' />
+    <button>Add</button>
+  </div>
+  <table class='content-table'>
+    <tr>
+      <th>Title</th>
+      <th>Quantity</th>
+      <th>Category</th>
+      <th>Warehouse</th>
+      <th></th>
+    </tr>
+    <% itemList.forEach(item => { %> 
+      <tr>
+        <td><%- item.title %></td>
+        <td><%- item.quantity %></td>
+        <td><%- item.category %></td>
+        <td><%- item.warehouse %></td>
+        <td>
+          <button>Edit</button>
+          <button>Remove</button>
+        </td>
+      </tr>
+    <% }) %> 
+  </table>
+</body>
+
 </html>
