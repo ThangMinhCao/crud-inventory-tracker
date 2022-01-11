@@ -3,13 +3,15 @@ const { getAllItems, createItem } = require("../services/item.service");
 const getItems = async (req, res) => {
   await getAllItems().then((items) => {
     console.log(items)
-    return items;
+    res.send(items)
   });
 }
 
 const addItem = async (req, res) => {
-  console.log(req.body);
-  // createItem() 
+  if (!req.body)
+    res.status(400).send();
+  createItem(req.body); 
+  res.status(200).send();
 }
 
 const updateItem = async (req, res) => {

@@ -6,7 +6,8 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const config = require('./config/config');
 
-const router = require('./routes/item.route');
+const itemRouter = require('./routes/item.route');
+const pageRouter = require('./routes/page.route');
 
 const app = express();
 
@@ -20,7 +21,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', router);
+app.use('/', pageRouter);
+app.use('/items', itemRouter);
 
 mongoose.connect(config.mongoURL, config.options, (err) => {
   if (err) console.log(err);
