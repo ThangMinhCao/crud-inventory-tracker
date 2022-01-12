@@ -7,13 +7,17 @@ a {
   color: #00B7FF;
 }
 
-.add-item-field {
+.input-field {
   padding: 5px;
-  background-color: rgba(0, 0, 0, 0.2);
   margin-bottom: 20px;
+}
 
-  /* display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); */
+.add-item-field {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.filter-item-field {
+  background-color: rgba(255, 0, 255, 0.2);
 }
 
 td, th {
@@ -28,5 +32,4 @@ tr:nth-child(even) {
 
 #content-table {
   width: 100%;
-  table-layout: fixed;
 }

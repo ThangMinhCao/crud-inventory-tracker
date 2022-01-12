@@ -9,7 +9,7 @@
 <body onload="init()">
   <h1><%= title %></h1>
   <p>Welcome to <%= title %> - by Minh Thang Cao</p>
-  <div class='add-item-field'>
+  <div class='input-field add-item-field'>
     <input id='title-input' placeholder='Title' />
     <input id='quantity-input' placeholder='Quantity' type='number' min='0' />
     <input id='category-input' placeholder='Category' />
@@ -17,6 +17,17 @@
     <input id='warehouse-input' placeholder='Warehouse' />
     <button id='add-button'>Add</button>
   </div>
+
+  <div class='input-field filter-item-field'>
+    <input id='title-filter' placeholder='Title' />
+    <input id='quantity-filter' placeholder='Quantity' type='number' min='0' />
+    <input id='category-filter' placeholder='Category' />
+    <input id='date-filter' type='date' />
+    <input id='warehouse-filter' placeholder='Warehouse' />
+    <button id='filter-button'>Filter</button>
+    <button id='clear-filter-button'>Clear</button>
+  </div>
+
   <table id='content-table'>
     <tr>
       <th>Title</th>

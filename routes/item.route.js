@@ -6,10 +6,11 @@ const {
   handleUpdateItem,
   handleDeleteItem,
 } = require("../controllers/item.controller");
+const handleMongooseQuery = require("../utils/responseHandler");
 
-router.get("/", handleGetItems);
-router.post("/", handleAddItem);
-router.put("/:id", handleUpdateItem);
-router.delete("/:id", handleDeleteItem);
+router.get("/", handleGetItems, handleMongooseQuery);
+router.post("/", handleAddItem, handleMongooseQuery);
+router.put("/:id", handleUpdateItem, handleMongooseQuery);
+router.delete("/:id", handleDeleteItem, handleMongooseQuery);
 
 module.exports = router;

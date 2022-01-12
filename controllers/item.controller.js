@@ -1,31 +1,37 @@
-const { getAllItems, createItem, updateItem, removeItem } = require("../services/item.service");
+const {
+  getAllItems,
+  createItem,
+  updateItem,
+  removeItem,
+} = require("../services/item.service");
 
-const handleGetItems = async (req, res) => {
-  getAllItems().then((items) => {
-    res.send(items);
-  });
-}
+const handleGetItems = async (req, res, next) => {
+  const query = Object.fromEntries(
+    Object.entries(req.query).filter(([key, value]) => value !== "")
+  );
 
-const handleAddItem = async (req, res) => {
-  if (!req.body)
-    res.status(400).send();
-  createItem(req.body); 
-  res.status(200).send();
-}
+  req.queryRes = getAllItems(query);
+  next();
+};
 
-const handleUpdateItem = async (req, res) => {
-  updateItem(req.params.id, req.body)
-  res.status(200).send();
-}
+const handleAddItem = async (req, res, next) => {
+  req.queryRes = createItem(req.body);
+  next();
+};
 
-const handleDeleteItem = async (req, res) => {
-  await removeItem(req.params.id)
-  res.status(200).send();
-}
+const handleUpdateItem = async (req, res, next) => {
+  req.queryRes = updateItem(req.params.id, req.body);
+  next();
+};
+
+const handleDeleteItem = async (req, res, next) => {
+  req.queryRes = removeItem(req.params.id);
+  next();
+};
 
 module.exports = {
   handleGetItems,
   handleAddItem,
   handleUpdateItem,
-  handleDeleteItem
-}
+  handleDeleteItem,
+};

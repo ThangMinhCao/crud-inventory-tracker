@@ -1,21 +1,24 @@
 const tableBody = document.getElementById("table-body");
 
 function init() {
-  renderItems();
-  
+  getItems();
+
   const addButton = document.getElementById("add-button");
   addButton.addEventListener("click", addItem);
+
+  const filterButton = document.getElementById("filter-button");
+  filterButton.addEventListener("click", getItems);
+
+  const clearFilterButton = document.getElementById("clear-filter-button");
+  clearFilterButton.addEventListener("click", clearFilter);
 }
 
-function renderItems() {
+function renderItems(items) {
   clearTable();
-
-  fetch("/items", { method: "GET" })
-    .then(res => { return res.json(); })
-    .then(data => data.forEach(item => appendItem(item)));
+  items.forEach((item) => renderOneItem(item));
 }
 
-function appendItem(item) {
+function renderOneItem(item) {
   const { _id, title, quantity, category, date, warehouse } = item;
   tableBody.insertAdjacentHTML(
     "beforeend",
@@ -36,8 +39,7 @@ function appendItem(item) {
 }
 
 function clearTable() {
-  while (tableBody.firstChild)
-    tableBody.removeChild(tableBody.firstChild);
+  while (tableBody.firstChild) tableBody.removeChild(tableBody.firstChild);
 }
 
 function addItem() {
@@ -47,25 +49,26 @@ function addItem() {
   const date = document.getElementById("date-input").value;
   const warehouse = document.getElementById("warehouse-input").value;
 
-  if (!(title && quantity && category && date && warehouse))
-    return
-  console.log({title, quantity, category, date, warehouse});
+  if (!(title && quantity && category && date && warehouse)) {
+    console.log("Data fields can't be empty.")
+    return;
+  }
 
   fetch("/items", {
     method: "POST",
     headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json"
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title, quantity, category, date, warehouse })
+    body: JSON.stringify({ title, quantity, category, date, warehouse }),
   });
 
-  renderItems();
+  getItems();
 }
 
 function deleteItem(id) {
   fetch(`/items/${id}`, { method: "DELETE" }).then(() => {
-    renderItems();
+    getItems();
   });
 }
 
@@ -78,10 +81,8 @@ function handleEdit(id) {
   editButton.addEventListener("click", handleApplyChange(id));
 
   for (let i = 0; i < inputFields.length; i++) {
-    if (mode === "Edit")
-      inputFields.item(i).removeAttribute("readonly");
-    else
-      inputFields.item(i).setAttribute("readonly", "true");
+    if (mode === "Edit") inputFields.item(i).removeAttribute("readonly");
+    else inputFields.item(i).setAttribute("readonly", "true");
   }
 
   tableRow.style.backgroundColor = mode === "Edit" ? "#FDFD96" : "transparent";
@@ -93,10 +94,10 @@ function handleApplyChange(id) {
   const tableRow = document.getElementById(`item-${id}`);
   const editButton = tableRow.getElementsByClassName("edit-button")[0];
   const inputFields = tableRow.getElementsByTagName("input");
-  
-  if (editButton.textContent === "Edit") return
 
-  const updatedItem = {}
+  if (editButton.textContent === "Edit") return;
+
+  const updatedItem = {};
 
   for (let i = 0; i < inputFields.length; i++) {
     const input = inputFields.item(i);
@@ -110,9 +111,45 @@ function updateItem(id, updatedItem) {
   fetch(`/items/${id}`, {
     method: "PUT",
     headers: {
-      "Accept": "application/json",
-      "Content-Type": "application/json"
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(updatedItem)
+    body: JSON.stringify(updatedItem),
   });
+}
+
+function getItems() {
+  const { title, quantity, category, date, warehouse } = getFilterInputValues();
+  const query = ""
+    + `title=${title}&`
+    + `quantity=${quantity}&`
+    + `category=${category}&`
+    + `date=${date}&`
+    + `warehouse=${warehouse}`;
+
+  fetch(`/items?${query}`, { method: "GET" })
+    .then(res => res.json())
+    .then(data => renderItems(data))
+    .catch(err => console.log(err));
+}
+
+function clearFilter() {
+  Object.values(getFilterInputs()).forEach((input) => input.value = "");  
+  getItems();
+}
+
+function getFilterInputs() {
+  const title = document.getElementById("title-filter");
+  const quantity = document.getElementById("quantity-filter");
+  const category = document.getElementById("category-filter");
+  const date = document.getElementById("date-filter");
+  const warehouse = document.getElementById("warehouse-filter");
+
+  return { title, quantity, category, date, warehouse };
+}
+
+function getFilterInputValues() {
+  return Object.fromEntries(
+    Object.entries(getFilterInputs()).map(([key, input]) => [key, input.value])
+  );
 }
