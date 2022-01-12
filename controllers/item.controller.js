@@ -1,30 +1,31 @@
-const { getAllItems, createItem } = require("../services/item.service");
+const { getAllItems, createItem, updateItem, removeItem } = require("../services/item.service");
 
-const getItems = async (req, res) => {
-  await getAllItems().then((items) => {
-    console.log(items)
-    res.send(items)
+const handleGetItems = async (req, res) => {
+  getAllItems().then((items) => {
+    res.send(items);
   });
 }
 
-const addItem = async (req, res) => {
+const handleAddItem = async (req, res) => {
   if (!req.body)
     res.status(400).send();
   createItem(req.body); 
   res.status(200).send();
 }
 
-const updateItem = async (req, res) => {
-
+const handleUpdateItem = async (req, res) => {
+  updateItem(req.params.id, req.body)
+  res.status(200).send();
 }
 
-const deleteItem = async (req, res) => {
-
+const handleDeleteItem = async (req, res) => {
+  await removeItem(req.params.id)
+  res.status(200).send();
 }
 
 module.exports = {
-  getItems,
-  addItem,
-  updateItem,
-  deleteItem
+  handleGetItems,
+  handleAddItem,
+  handleUpdateItem,
+  handleDeleteItem
 }

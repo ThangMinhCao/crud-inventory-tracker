@@ -9,17 +9,16 @@ const createItem = async (itemInfo) => {
   return Item.create(itemInfo);
 }
 
-const updateItem = async (itemInfo) => {
-  query = { "_id": itemInfo._id }
-  return Item.findOneAndUpdate(query, itemInfo, { upsert: true }, (err) => {
+const updateItem = async (id, updatedItem) => {
+  Item.findByIdAndUpdate(id, updatedItem, { upsert: true }, (err) => {
     if (err) console.log(err);
   })
 }
 
-const removeItem = async (itemInfo) => {
-  return Item.findByIdAndRemove(itemInfo._id, (err) => {
+const removeItem = async (itemId) => {
+  Item.findByIdAndRemove(itemId, (err) => {
     if (err) console.log(err)
-  })
+  });
 }
 
 module.exports = {

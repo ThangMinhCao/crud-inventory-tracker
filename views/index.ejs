@@ -8,16 +8,16 @@
 
 <body onload="init()">
   <h1><%= title %></h1>
-  <p>Welcome to <%= title %></p>
+  <p>Welcome to <%= title %> - by Minh Thang Cao</p>
   <div class='add-item-field'>
-    <input placeholder='Title' />
-    <input placeholder='Quantity' type='number' min='0' />
-    <input placeholder='Category' />
-    <input type='date' />
-    <input placeholder='Warehouse' />
-    <button>Add</button>
+    <input id='title-input' placeholder='Title' />
+    <input id='quantity-input' placeholder='Quantity' type='number' min='0' />
+    <input id='category-input' placeholder='Category' />
+    <input id='date-input' type='date' />
+    <input id='warehouse-input' placeholder='Warehouse' />
+    <button id='add-button'>Add</button>
   </div>
-  <table class='content-table'>
+  <table id='content-table'>
     <tr>
       <th>Title</th>
       <th>Quantity</th>
@@ -26,19 +26,7 @@
       <th>Warehouse</th>
       <th></th>
     </tr>
-    <% itemList.forEach(item => { %>
-    <tr>
-      <td><%- item.title %></td>
-      <td><%- item.quantity %></td>
-      <td><%- item.category %></td>
-      <td><%- item.date.toDateString() %></td>
-      <td><%- item.warehouse %></td>
-      <td>
-        <button>Edit</button>
-        <button>Remove</button>
-      </td>
-    </tr>
-    <% }) %>
+    <tbody id='table-body'></tbody>
   </table>
 
   <script type="text/javascript" src="/javascripts/frontendScript.js"></script>

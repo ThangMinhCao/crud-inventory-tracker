@@ -15,8 +15,8 @@ const itemSchema = mongoose.Schema(
       default: "Item"
     },
     date: {
-      type: Date,
-      default: new Date()
+      type: String,
+      required: true
     },
     warehouse: {
       type: String,
