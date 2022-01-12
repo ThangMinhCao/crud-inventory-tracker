@@ -13,11 +13,19 @@ function init() {
   clearFilterButton.addEventListener("click", clearFilter);
 }
 
+/**
+ * Render all item objects given in a list to the content table.
+ * @param items Object contains a list of item objects.
+ */
 function renderItems(items) {
   clearTable();
   items.forEach((item) => renderOneItem(item));
 }
 
+/**
+ * Render one item as a table row at a time.
+ * @param item Item object that contains crucial info like title, quantity, etc. 
+ */
 function renderOneItem(item) {
   const { _id, title, quantity, category, date, warehouse } = item;
   tableBody.insertAdjacentHTML(
@@ -38,10 +46,16 @@ function renderOneItem(item) {
   );
 }
 
+/**
+ * Empty the content table by removing all rows.
+ */
 function clearTable() {
   while (tableBody.firstChild) tableBody.removeChild(tableBody.firstChild);
 }
 
+/**
+ * Add an item to the database by fetching API.
+ */
 function addItem() {
   const title = document.getElementById("title-input").value;
   const quantity = document.getElementById("quantity-input").value;
@@ -61,17 +75,25 @@ function addItem() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ title, quantity, category, date, warehouse }),
-  });
+  }).catch(err => console.log(err));
 
   getItems();
 }
 
+/**
+ * Delete an item from the database with the provided Id
+ * @param id Id of the item you want to remove.
+ */
 function deleteItem(id) {
   fetch(`/items/${id}`, { method: "DELETE" }).then(() => {
     getItems();
   });
 }
 
+/**
+ * Handle event clicking the edit button of one of the items.
+ * @param id Id of the item you want to edit.
+ */
 function handleEdit(id) {
   const tableRow = document.getElementById(`item-${id}`);
   const editButton = tableRow.getElementsByClassName("edit-button")[0];
@@ -90,6 +112,10 @@ function handleEdit(id) {
   editButton.textContent = mode === "Edit" ? "Apply" : "Edit";
 }
 
+/**
+ * Handle event clicking on the "Apply" button after editing.
+ * @param id Id of the item
+ */
 function handleApplyChange(id) {
   const tableRow = document.getElementById(`item-${id}`);
   const editButton = tableRow.getElementsByClassName("edit-button")[0];
@@ -107,6 +133,11 @@ function handleApplyChange(id) {
   editButton.removeEventListener("click", handleApplyChange);
 }
 
+/**
+ * Fetch API to update the corresponding item info.
+ * @param id Id of the item being edited.
+ * @param updatedItem Updated item object.
+ */
 function updateItem(id, updatedItem) {
   fetch(`/items/${id}`, {
     method: "PUT",
@@ -115,9 +146,12 @@ function updateItem(id, updatedItem) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(updatedItem),
-  });
+  }).catch(err => console.log(err));
 }
 
+/**
+ * Get all item objects by fetching API with given query.
+ */
 function getItems() {
   const { title, quantity, category, date, warehouse } = getFilterInputValues();
   const query = ""
@@ -133,11 +167,18 @@ function getItems() {
     .catch(err => console.log(err));
 }
 
+/**
+ * Clear all the filter input fields and reset table to show all items.
+ */
 function clearFilter() {
   Object.values(getFilterInputs()).forEach((input) => input.value = "");  
   getItems();
 }
 
+/**
+ * Get all the HTML Input elements for filtering.
+ * @returns Object contains all HTML Input elements on the filter selector.
+ */
 function getFilterInputs() {
   const title = document.getElementById("title-filter");
   const quantity = document.getElementById("quantity-filter");
@@ -148,6 +189,10 @@ function getFilterInputs() {
   return { title, quantity, category, date, warehouse };
 }
 
+/**
+ * Get String text corresponding to the filter parameters.
+ * @returns Object contains String values on the HTML Input element for filtering.
+ */
 function getFilterInputValues() {
   return Object.fromEntries(
     Object.entries(getFilterInputs()).map(([key, input]) => [key, input.value])
